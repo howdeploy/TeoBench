@@ -1,0 +1,97 @@
+{
+  "profile": "reasoning-effort-7x5-v1",
+  "models": [
+    "gpt-5.6-luna",
+    "gpt-6-luna",
+    "gpt-5.6-terra",
+    "gpt-6.1-terra",
+    "gpt-5.6-sol",
+    "gpt-6.1-sol",
+    "gpt-6-astra"
+  ],
+  "efforts": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "primary": {
+    "task_ids": [
+      "R01",
+      "R02",
+      "R03",
+      "R04",
+      "R05",
+      "R06",
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06",
+      "T01",
+      "T02",
+      "T03",
+      "T04",
+      "T05",
+      "T06"
+    ],
+    "replicates": [
+      0
+    ],
+    "expected_results": 1050
+  },
+  "pilot": {
+    "task_ids": [
+      "R01",
+      "C04",
+      "S03",
+      "D06",
+      "T01"
+    ],
+    "efforts": [
+      "high"
+    ],
+    "replicates": [
+      1
+    ],
+    "expected_results": 35
+  },
+  "controls": {
+    "task_ids": [
+      "R04",
+      "D03",
+      "T03"
+    ],
+    "efforts": [
+      "high"
+    ],
+    "replicates": [
+      2,
+      3
+    ],
+    "expected_results": 42
+  },
+  "execution": {
+    "workers": 4,
+    "max_active_per_model": 1,
+    "minimum_request_gap_seconds": 4,
+    "timeout_seconds": 240
+  },
+  "no_model_or_effort_substitution": true,
+  "missing_access": "BLOCKED, never silently reduce the matrix",
+  "submission_requirement": "Full original protocol: 1050 primary, 35 pilot, 42 control results"
+}

@@ -248,7 +248,7 @@ class StudyTests(unittest.TestCase):
         studies.add_record(self.study,'R02','test-model','high',json.dumps(self.answers['R02']['expected']),[])
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'study.json';studies.save(path,self.study)
-            with patch('teobench.studies.subprocess.run',side_effect=AssertionError('unexpected network')):
+            with patch('teobench.campaign.require_complete', return_value={}), patch('teobench.studies.subprocess.run',side_effect=AssertionError('unexpected network')):
                 report=studies.publish(path)
                 self.assertIn('preview',report)
 
@@ -263,7 +263,7 @@ class StudyTests(unittest.TestCase):
             return subprocess.CompletedProcess(command,0,json.dumps(replies[len(calls)-1]),'')
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'study.json';studies.save(path,self.study)
-            with patch('teobench.studies.subprocess.run',side_effect=fake):
+            with patch('teobench.campaign.require_complete', return_value={}), patch('teobench.studies.subprocess.run',side_effect=fake):
                 result=studies.publish(path,publish=True,gh='gh')
         self.assertFalse(result['auto_merged'])
         self.assertTrue(calls[-1][0][2].endswith('/pulls'))

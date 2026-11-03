@@ -41,6 +41,8 @@ The grader checks the final sum/count, successful reads of every required ID, co
 
 ## Community reports
 
+The default research profile is [reasoning-effort-7x5-v1](../Easy-Bench/campaign.json): 1050 primary trials across seven models and five efforts, 35 pilot trials at replicate 1, and 42 controls at replicates 2 and 3. Primary replicate is 0. Thirty tasks form one condition, not the full research. Local schema validation permits checkpoints; publication and trusted PR validation additionally require complete campaign coverage. Use [the run guide](RUN_FULL_STUDY.md). Earlier accepted primary-only reports remain readable and do not prove a new full-protocol execution.
+
 `study.json` schema 1.0 has:
 
 - `study_id`, timezone-aware `created_at`, `environment`, `access_route` and `method`.

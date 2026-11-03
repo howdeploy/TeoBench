@@ -22,7 +22,7 @@ class TrustedValidatorTests(unittest.TestCase):
         files=[{'filename':'Easy-Bench/studies/validator-test/study.json','status':'added','sha':sha}]
         blob={'size':len(data),'encoding':'base64','content':base64.b64encode(data).decode()}
         def api(path):return files if '/files?' in path else blob
-        with patch.object(validator,'api',side_effect=api):
+        with patch.object(validator,'require_complete',return_value={}), patch.object(validator,'api',side_effect=api):
             report=validator.validate_files('owner/repo','1')
             self.assertEqual(report[0]['records'],1)
             self.assertTrue(report[0]['answers_regraded'])

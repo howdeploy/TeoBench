@@ -14,6 +14,17 @@ The first tier, **[Easy-Bench](Easy-Bench/README.md)**, contains 30 tasks from a
 | Data | 6 | Filters, revisions, duplicates and untrusted text |
 | Tools | 6 | Sequences of actual `lookup` calls |
 
+## Run the full study — instructions for agents
+
+**The default study is 7 models × 5 efforts × 30 tasks = 1050 primary trials, not 30 trials on one model.** Repeating the original protocol also includes 35 pilot and 42 control trials, for 1127 total. All seven models and all five efforts are required; inaccessible routes must be reported as BLOCKED, never silently omitted.
+
+Read **[Run the full study](docs/RUN_FULL_STUDY.md)** and [AGENTS.md](AGENTS.md). The exact models, efforts, task IDs and phase settings are in [campaign.json](Easy-Bench/campaign.json). The agent invokes the configured models; the CLI alone does not perform inference.
+
+```bash
+python3 -m teobench campaign plan
+python3 -m teobench campaign status --file local-runs/study.json
+```
+
 ## Quick start
 
 Python 3.9+ and the standard library are sufficient for the inspection and grading CLI; no Python packages or API keys are required. Grading Python answers additionally requires one of:
@@ -43,7 +54,7 @@ Run all commands from the repository root. The grader does not call models. Use 
 ## Contribute a study
 
 1. Create a report with the exact model ID, reasoning effort and run conditions.
-2. Record every answer, including failures. A complete run contains all 30 tasks for one model, effort setting and replicate number.
+2. Record every answer, including failures. One condition contains 30 tasks; the required primary campaign contains all 35 model/effort conditions. Complete the pilot and controls as described above.
 3. Validate the report and review the data that will become public.
 4. Confirm submission: the CLI creates a pull request; it does not merge it automatically.
 

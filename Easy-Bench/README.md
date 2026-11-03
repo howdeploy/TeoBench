@@ -1,5 +1,7 @@
 # Easy-Bench
 
+**Default research / Полное исследование: 7 models × 5 efforts × 30 tasks = 1050 primary trials, plus 35 pilot and 42 control trials. Thirty tasks on one model are only one condition.** Read [the full-study guide](../docs/RUN_FULL_STUDY.md) and [campaign.json](campaign.json).
+
 Первый уровень TeoBench: 30 неизменённых задач исследования reasoning effort сентября и ноября 2026 года. Название Easy относится ко всему уровню, а не только к десяти задачам с исходной меткой `easy`.
 
 | Папка | Содержание |
