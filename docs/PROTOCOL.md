@@ -49,6 +49,8 @@ PR validation uses `workflow_run` to execute trusted default-branch code after t
 
 This avoids a dependency on `pull_request_target` execution policies; see [GitHub's security reference](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target). No untrusted artifacts or caches are downloaded by the trusted validator.
 
+Maintainers can also recheck a PR explicitly with `gh workflow run studies.yml -R teo-nex/TeoBench -f pr_number=NUMBER`. This runs the same trusted validator and posts a verdict for that PR's current head, without merging it.
+
 Statistics include only complete 30-task conditions and report run count, study count, mean/median/min/max pass rates and transport errors. Different model IDs, effort, routes, environments and grader digests remain separate. Exact duplicated response sets are excluded even if study metadata is changed. This does not prevent a malicious contributor inventing a different self-report or claiming a different model.
 
 A submission's scores can be independently checked from public answers. Model identity, execution settings, repeat-selection policy and tool-call provenance are self-reported. Latency is recorded only when available and is not mixed into a quality ranking.
