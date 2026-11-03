@@ -248,9 +248,13 @@ def statistics_report(paths, regrade=True):
 
 def publish(path, publish=False, gh=None):
     study = load_json(path)
-    report = validate(study)
+    report = validate(study, regrade=False)
     if not report["records"]:
         raise ValueError("cannot_submit_empty_study")
+    from .campaign import require_complete
+    campaign = require_complete(study)
+    report = validate(study)
+    report["campaign"] = campaign
     if not publish:
         return {"preview": report, "destination": UPSTREAM,
             "publishes": "answers, synthetic lookup receipts, model IDs, environment, timing and scores",

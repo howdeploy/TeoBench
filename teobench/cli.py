@@ -86,11 +86,39 @@ def main(argv=None):
         if action == "submit":
             command.add_argument("--publish", action="store_true", help="explicit consent to create a public PR")
             command.add_argument("--gh", help="path to an authenticated GitHub CLI")
+    campaign = sub.add_parser("campaign", help="plan and check the FULL 7-model x 5-effort study")
+    campaign_actions = campaign.add_subparsers(dest="action", required=True)
+    campaign_actions.add_parser("plan")
+    for action in ["status", "next"]:
+        command = campaign_actions.add_parser(action)
+        command.add_argument("--file", type=Path, required=True)
     stats = sub.add_parser("stats", help="regrade accepted studies and aggregate complete runs")
     stats.add_argument("--directory", type=Path, default=ROOT / "Easy-Bench" / "studies")
     stats.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.command == "campaign":
+            from . import campaign, studies
+            if args.action == "plan":
+                config, jobs = campaign.plan()
+                emit({"configuration": config, "planned_trials": len(jobs),
+                      "primary_trials": 1050, "pilot_trials": 35, "control_trials": 42,
+                      "next": "Execute all configured models/efforts through your model interfaces; CLI inspection does not run inference."})
+                return 0
+            value = studies.load_json(args.file)
+            studies.validate(value, regrade=False)
+            result = campaign.coverage(value)
+            if args.action == "next":
+                job = result["next_trial"]
+                if job:
+                    tasks, _, _ = load()
+                    emit({"trial": job, "task": next(task for task in tasks if task["id"] == job["task_id"]),
+                          "note": "Invoke the exact requested model and effort; do not answer using the orchestrator model."})
+                else:
+                    emit(result)
+                return 0
+            emit(result)
+            return 0 if result["full_protocol_complete"] else 1
         if args.command == "study":
             from . import studies
             if args.action == "create":
