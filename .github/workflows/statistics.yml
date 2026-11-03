@@ -18,14 +18,23 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: Regrade merged studies and rebuild statistics
-        run: /usr/bin/python3 -m teobench stats --output Easy-Bench/statistics/summary.json
-      - name: Commit changed statistics
+      - name: Regrade latest accepted studies and commit statistics
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Easy-Bench/statistics/summary.json Easy-Bench/statistics/summary.csv
-          if ! git diff --cached --quiet; then
+          for attempt in 1 2 3; do
+            # This is the disposable CI checkout. Always use the latest main;
+            # another accepted PR may have landed while the job was queued.
+            git fetch origin main
+            git reset --hard origin/main
+            /usr/bin/python3 -m teobench stats --output Easy-Bench/statistics/summary.json
+            git add Easy-Bench/statistics/summary.json Easy-Bench/statistics/summary.csv
+            if git diff --cached --quiet; then
+              exit 0
+            fi
             git commit -m 'Update Easy-Bench community statistics'
-            git push
-          fi
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
