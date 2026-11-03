@@ -12,10 +12,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from teobench.studies import MAX_BYTES, load_json, save, validate
 
 
-def api(path):
+def api(path, payload=None):
+    data = json.dumps(payload).encode() if payload is not None else None
     request = urllib.request.Request("https://api.github.com/"+path, headers={
         "Accept": "application/vnd.github+json", "Authorization": "Bearer "+os.environ["GH_TOKEN"],
-        "X-GitHub-Api-Version": "2022-11-28"})
+        "X-GitHub-Api-Version": "2022-11-28", "Content-Type":"application/json"}, data=data)
     with urllib.request.urlopen(request, timeout=30) as response:
         data = response.read(12_000_001)
         if len(data) > 12_000_000:
@@ -25,9 +26,53 @@ def api(path):
 
 def main():
     repo = os.environ["GITHUB_REPOSITORY"]
-    number = os.environ["PR_NUMBER"]
-    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo) or not number.isdigit():
+    number = os.environ.get("PR_NUMBER", "")
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
         raise ValueError("invalid_repository_or_pr_number")
+    run_id = os.environ.get("SOURCE_RUN_ID")
+    if run_id:
+        if not run_id.isdigit():
+            raise ValueError("invalid_source_run_id")
+        run = api("repos/"+repo+"/actions/runs/"+run_id)
+        if run["event"] != "pull_request" or run["name"] != "Check Easy benchmark":
+            raise ValueError("unexpected_source_workflow")
+        candidates = run.get("pull_requests", [])
+        if not candidates:
+            candidates = api("repos/"+repo+"/commits/"+run["head_sha"]+"/pulls")
+        matches = []
+        for item in candidates:
+            pull = api("repos/"+repo+"/pulls/"+str(item["number"]))
+            if pull["state"] == "open" and pull["head"]["sha"] == run["head_sha"]:
+                matches.append(str(pull["number"]))
+        if not matches:
+            print(json.dumps({"status":"SKIP","reason":"No open PR at this workflow head; possibly superseded"}))
+            return
+        if len(matches) != 1:
+            raise ValueError("ambiguous_source_pr")
+        number = matches[0]
+    if not number.isdigit():
+        raise ValueError("invalid_pr_number")
+    pull = api("repos/"+repo+"/pulls/"+number)
+    head = pull["head"]["sha"]
+    context = os.environ.get("STATUS_CONTEXT")
+    def status(state, description):
+        if context:
+            api("repos/"+repo+"/statuses/"+head, {"state":state,"context":context,
+                "description":description,"target_url":"https://github.com/"+repo+"/actions/runs/"+os.environ["GITHUB_RUN_ID"]})
+    status("pending", "Trusted grader is validating study JSON")
+    try:
+        reports = validate_files(repo, number)
+        # A late update cannot receive a verdict for the old head.
+        if api("repos/"+repo+"/pulls/"+number)["head"]["sha"] != head:
+            raise ValueError("pr_head_changed_during_validation")
+        status("success", "Study JSON and benchmark answers verified" if reports else "No study files in this PR")
+        print(json.dumps({"status":"PASS","studies":reports,"PR_code_executed":False}, indent=2))
+    except Exception:
+        status("failure", "Study validation failed; see trusted workflow logs")
+        raise
+
+
+def validate_files(repo, number):
     files = []
     for page in range(1, 32):
         batch = api("repos/"+repo+"/pulls/"+number+"/files?per_page=100&page="+str(page))
@@ -67,7 +112,7 @@ def main():
             reports.append(report)
     if reports and len(data_files) != len(files):
         raise ValueError("study_submission_must_only_add_study_json_files; submit_code_changes_separately")
-    print(json.dumps({"status":"PASS","studies":reports,"PR_code_executed":False}, indent=2))
+    return reports
 
 
 if __name__ == "__main__":

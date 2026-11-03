@@ -1,22 +1,26 @@
 name: Validate community studies
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ['Check Easy benchmark']
+    types: [completed]
 permissions:
   contents: read
   pull-requests: read
+  statuses: write
 jobs:
   regrade:
+    if: github.event.workflow_run.event == 'pull_request'
     runs-on: macos-15
     timeout-minutes: 15
     steps:
       - name: Check out trusted base only
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Read submitted JSON and regrade with the base grader
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+          STATUS_CONTEXT: Easy study regrade
         run: /usr/bin/python3 scripts/validate_study_pr.py

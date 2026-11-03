@@ -45,7 +45,9 @@ The grader checks the final sum/count, successful reads of every required ID, co
 
 No provider secrets, system/native logs or private project data are requested. An answer can contain only benchmark material; inspect before publishing. Transport errors carry `evaluation: null`. Incorrect code/SQL may legitimately have a grading error such as a syntax error; infrastructure unavailability must be fixed before submission. Max report size is 8 MB and 3000 records; split larger campaigns into separate reports. The parser rejects extra fields and duplicate keys.
 
-PR validation reads only allowed new study JSON files and regrades them using code checked out from the base commit. No PR scripts, workflow edits, package installations or submitted Python imports are executed by that validation. Main-branch statistics rebuild after acceptance. Maintainers review PRs; there is no automatic merge.
+PR validation uses `workflow_run` to execute trusted default-branch code after the PR check completes. It reads only allowed new study JSON files and regrades them without checking out PR code. Permissions are limited to reading contents/PRs and posting the `Easy study regrade` commit status. The source run and current PR head must match. No PR scripts, workflow edits, package installations or submitted Python imports are executed by that validation. Main-branch statistics rebuild after acceptance. Maintainers review PRs; there is no automatic merge.
+
+This avoids a dependency on `pull_request_target` execution policies; see [GitHub's security reference](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target). No untrusted artifacts or caches are downloaded by the trusted validator.
 
 Statistics include only complete 30-task conditions and report run count, study count, mean/median/min/max pass rates and transport errors. Different model IDs, effort, routes, environments and grader digests remain separate. Exact duplicated response sets are excluded even if study metadata is changed. This does not prevent a malicious contributor inventing a different self-report or claiming a different model.
 
