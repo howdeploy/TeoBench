@@ -38,7 +38,7 @@ class TrustedValidatorTests(unittest.TestCase):
             if '/actions/runs/' in path:
                 return {'event':'pull_request','name':'Check Easy benchmark','head_sha':head,'pull_requests':[{'number':1}]}
             if '/statuses/' in path:return {}
-            return {'state':'open','head':{'sha':head}}
+            return {'number':1,'state':'open','head':{'sha':head}}
         env={'GITHUB_REPOSITORY':'owner/repo','SOURCE_RUN_ID':'123','STATUS_CONTEXT':'Easy study regrade','GITHUB_RUN_ID':'456'}
         with patch.dict(os.environ,env,clear=True), patch.object(validator,'api',side_effect=api), patch.object(validator,'validate_files',return_value=[]), contextlib.redirect_stdout(io.StringIO()):
             validator.main()
