@@ -1,20 +1,22 @@
 # TeoBench
 
-Открытый набор для проверки reasoning моделей и сбора воспроизводимых исследований сообщества.
+**English** · [Русский](README.ru.md)
 
-Первый уровень — **[Easy-Bench](Easy-Bench/README.md)**: 30 задач из уже проведённого исследования reasoning effort. Тексты, входные данные и эталоны сохранены без изменений. Это небольшой синтетический baseline; более сложные рабочие сценарии пока не добавлены.
+An open benchmark for evaluating model reasoning and collecting reproducible community studies.
 
-| Категория | Задач | Что проверяем |
+The first tier, **[Easy-Bench](Easy-Bench/README.md)**, contains 30 tasks from a completed reasoning-effort study. Prompts, inputs and reference answers are preserved unchanged. This is a small synthetic baseline; more demanding real-world scenarios have not been added yet.
+
+| Category | Tasks | What it tests |
 |---|---:|---|
-| Reasoning | 6 | Округление, интервалы, оптимизация, подсчёт вариантов |
-| Python | 6 | Функция `solve(data)`, 300 проверок |
-| SQL | 6 | SELECT на 72 базах SQLite |
-| Данные | 6 | Фильтры, ревизии, дубликаты, недоверенный текст |
-| Инструменты | 6 | Последовательность реальных вызовов `lookup` |
+| Reasoning | 6 | Rounding, intervals, optimization and counting |
+| Python | 6 | A `solve(data)` function, checked against 300 test cases |
+| SQL | 6 | SELECT queries across 72 SQLite databases |
+| Data | 6 | Filters, revisions, duplicates and untrusted text |
+| Tools | 6 | Sequences of actual `lookup` calls |
 
-## Быстрый старт
+## Quick start
 
-Python 3.9+, стандартная библиотека; установка пакетов и ключи API не нужны. Проверка Python-ответов требует **macOS с `/usr/bin/sandbox-exec`** и интерпретатор, установленный вне `/Users` и `/Volumes`. На других ОС оценщик Python намеренно не запускает код без изоляции.
+Python 3.9+ and the standard library are sufficient for the inspection and grading CLI; no packages or API keys are required. Grading Python answers requires **macOS with `/usr/bin/sandbox-exec`** and a Python interpreter installed outside `/Users` and `/Volumes`. On other operating systems, the Python grader refuses to execute code without isolation.
 
 ```bash
 git clone https://github.com/teo-nex/TeoBench.git
@@ -25,20 +27,20 @@ python3 -m teobench show R01
 python3 -m unittest discover -s tests -v
 ```
 
-Полученный ответ можно проверить отдельно:
+Grade an individual answer:
 
 ```bash
 python3 -m teobench grade R01 --answer answer.txt
 ```
 
-Все команды работают из корня checkout. Оценщик не вызывает модели. Для выполнения задач подключите свою модель или агента и передавайте ему только вывод `show` и разрешённый `lookup`, без доступа к эталонам.
+Run all commands from the repository root. The grader does not call models. Use your own model or agent to complete the tasks, giving the evaluated model only the output of `show` and the permitted `lookup` tool, without access to reference answers.
 
-## Отправить своё исследование
+## Contribute a study
 
-1. Создайте отчёт с точным ID модели, effort и условиями запуска.
-2. Сохраняйте каждый ответ, включая ошибки. Один полный запуск — все 30 задач для одной модели, effort и номера повтора.
-3. Проверьте отчёт и просмотрите состав публичных данных.
-4. Подтвердите отправку: CLI создаст pull request; автоматического merge нет.
+1. Create a report with the exact model ID, reasoning effort and run conditions.
+2. Record every answer, including failures. A complete run contains all 30 tasks for one model, effort setting and replicate number.
+3. Validate the report and review the data that will become public.
+4. Confirm submission: the CLI creates a pull request; it does not merge it automatically.
 
 ```bash
 python3 -m teobench study create --id my-first-study --file local-runs/study.json \
@@ -48,22 +50,22 @@ python3 -m teobench study create --id my-first-study --file local-runs/study.jso
 python3 -m teobench study record --file local-runs/study.json \
   --task R01 --model exact-model-id --effort high --answer answer.txt
 
-# Повторите record для остальных задач; ошибки и повторы тоже сохраняйте.
+# Repeat record for the remaining tasks; retain failures and repeated attempts too.
 python3 -m teobench study validate --file local-runs/study.json
 python3 -m teobench study submit --file local-runs/study.json
 
-# После просмотра отчёта и согласия на публичную отправку:
+# After reviewing the report and consenting to public submission:
 python3 -m teobench study submit --file local-runs/study.json --publish
 ```
 
-Отправка требует авторизованный [GitHub CLI](https://cli.github.com/). Без `--publish` команда только показывает предварительный просмотр и не обращается к GitHub. Подробности: [CONTRIBUTING.md](CONTRIBUTING.md) и [протокол](docs/PROTOCOL.md).
+Submission requires an authenticated [GitHub CLI](https://cli.github.com/). Without `--publish`, the command only displays a local preview and does not contact GitHub. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [protocol](docs/PROTOCOL.md) for details.
 
-## Исследования и статистика
+## Studies and statistics
 
-- [Принятые отчёты](Easy-Bench/studies): ответы, оценки и условия запуска в едином JSON-формате.
-- [Сводная статистика](Easy-Bench/statistics/summary.json): пересчитывается после принятия отчётов; отдельные группы для разных моделей, effort, маршрутов, окружений и версий оценщика.
-- [Первое исследование, 3 ноября 2026](Easy-Bench/research-2026-11-03/README.md): 7 моделей × 30 задач × 5 effort = 1050 основных ответов; после исправления оценщика — **991/1050**.
+- [Accepted reports](Easy-Bench/studies): answers, scores and run conditions in a shared JSON format.
+- [Aggregate statistics](Easy-Bench/statistics/summary.json): rebuilt after reports are accepted, with separate groups for each model, effort setting, access route, environment and grader version.
+- [First study, November 3, 2026](Easy-Bench/research-2026-11-03/README.md): 7 models × 30 tasks × 5 effort settings = 1,050 primary answers; **991/1,050** passed after the grader correction.
 
-GitHub проверяет структуру отчётов и заново оценивает ответы доверенным кодом базовой ветки. Только полные запуски попадают в сводку; точные копии наборов ответов исключаются. Идентичность серверной модели, честность истории инструментов и отсутствие доступа к эталонам остаются заявлениями автора исследования. Эти данные не являются независимой аттестацией провайдера или репрезентативной выборкой всех пользователей.
+GitHub validates report structure and regrades answers using trusted base-branch code. Only complete runs enter the aggregate statistics; exact duplicate response sets are excluded. Server-side model identity, tool-history authenticity and lack of access to reference answers remain claims made by the study author. These reports are neither independent provider attestations nor a representative sample of all users.
 
-Эталоны опубликованы для воспроизводимости: Easy-Bench больше не скрытый holdout. Внутренние исходные метки `easy/medium/hard` сохранены, но весь старый набор относится к уровню TeoBench **Easy**. [Происхождение и контрольные суммы](Easy-Bench/tasks/PROVENANCE.json). Лицензия — [MIT](LICENSE).
+Reference answers are public for reproducibility, so Easy-Bench is no longer a hidden holdout. The original internal `easy/medium/hard` labels are retained, but the entire original set belongs to the TeoBench **Easy** tier. See [provenance and checksums](Easy-Bench/tasks/PROVENANCE.json). Licensed under [MIT](LICENSE).
