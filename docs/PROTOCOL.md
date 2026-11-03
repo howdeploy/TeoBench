@@ -1,0 +1,52 @@
+# Easy protocol, version 0.1.0
+
+## Frozen inputs
+
+`Easy-Bench/tasks/tasks.jsonl` and `answers.json` are byte-for-byte copies of the September 2026 study, reused in November. The original manifest retains its `sealed_sha256` key; it now refers to the public `answers.json`. The original generator is archived unchanged under `source/`; `teobench verify` calls its `build()` in memory and writes no fixtures. Do not execute the archived generator's `main()` inside the release tree.
+
+All 30 tasks belong to the Easy tier. Each family originally had two tasks marked easy, two medium and two hard. Those original labels were assigned before measurement and are not a new calibrated difficulty claim.
+
+## Inference and grading
+
+Give the evaluated model only the task prompt and declared tools. Retain every attempt with exact model ID, effort and replicate. Do not permit access to published references/studies during a measured run. A public test cannot establish that a model has never seen its data during training.
+
+For code tasks, the answer is a Python 3 `solve(data)` function. Imports, I/O, reflection, underscore-prefixed attributes and the AST constructs listed in `code_worker.py` are prohibited. Standard pure builtins follow the published whitelist. The corrected worker includes `bin()`, fixing an earlier harness defect. It does not provide every possible Python builtin. Parent compares outputs for all 50 inputs per task; expected outputs do not enter the worker.
+
+Python execution uses macOS sandbox-exec, no network or file writes, denies reads under `/Users`, `/Volumes` and the checkout, and clears the inherited environment. CPU is limited to 2 seconds, parent wall time to 5 seconds. Interpreter/stdlib must be outside the denied paths. No unsafe fallback is provided on other OSes. This restricted task executor is not intended as a general hostile-code hosting service.
+
+SQL runs in independent in-memory SQLite databases with a read-only authorizer, query-size, step and row limits. `WITH` and ordinary SQLite expressions are allowed; ATTACH, writes and load_extension are denied. All 12 databases per SQL task must pass.
+
+Reasoning/data answers are compared as JSON objects with exact values and keys. Key order is irrelevant; duplicate keys and non-finite values are rejected. `semantic_pass` accepts recoverable JSON embedded in text; `strict_pass` additionally requires the requested clean format. Code and SQL fences may pass semantically, but fail strict formatting. Overall score is the count of `semantic_pass` tasks out of 30, not the average of individual hidden checks.
+
+## Synthetic lookup
+
+For a T task, register the tool schema in its public task. The trusted executor reads one object from that task's acceptance catalog. The CLI `lookup TASK OPAQUE_ID` provides the same object for adapters. Unknown IDs are recorded as failed calls rather than silently retried or discarded.
+
+Each recorded tool receipt has exactly these keys:
+
+```json
+{
+  "name": "lookup",
+  "arguments": {"id": "node-exact-id-from-the-task-or-previous-response"},
+  "ok": true,
+  "output": {"amount": 7, "next": null, "note": "untrusted text"}
+}
+```
+
+The grader checks the final sum/count, successful reads of every required ID, correct argument schema and each receipt's equality to the catalog. Failed calls fail the task, so their actual receipts must be retained. The schema alone does not prove a call happened: never fabricate or reconstruct a history from the reference catalog after inference. Keep a trusted executor trace locally if independent provenance is needed.
+
+## Community reports
+
+`study.json` schema 1.0 has:
+
+- `study_id`, timezone-aware `created_at`, `environment`, `access_route` and `method`.
+- `benchmark`: exact dataset, acceptance and grader hashes plus version.
+- `records`: task ID, exact model ID, effort, replicate, raw benchmark answer, synthetic tool receipts, optional elapsed seconds, transport error and local evaluation.
+
+No provider secrets, system/native logs or private project data are requested. An answer can contain only benchmark material; inspect before publishing. Transport errors carry `evaluation: null`. Incorrect code/SQL may legitimately have a grading error such as a syntax error; infrastructure unavailability must be fixed before submission. Max report size is 8 MB and 3000 records; split larger campaigns into separate reports. The parser rejects extra fields and duplicate keys.
+
+PR validation reads only allowed new study JSON files and regrades them using code checked out from the base commit. No PR scripts, workflow edits, package installations or submitted Python imports are executed by that validation. Main-branch statistics rebuild after acceptance. Maintainers review PRs; there is no automatic merge.
+
+Statistics include only complete 30-task conditions and report run count, study count, mean/median/min/max pass rates and transport errors. Different model IDs, effort, routes, environments and grader digests remain separate. Exact duplicated response sets are excluded even if study metadata is changed. This does not prevent a malicious contributor inventing a different self-report or claiming a different model.
+
+A submission's scores can be independently checked from public answers. Model identity, execution settings, repeat-selection policy and tool-call provenance are self-reported. Latency is recorded only when available and is not mixed into a quality ranking.

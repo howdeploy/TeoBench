@@ -1,0 +1,30 @@
+[
+  {
+    "task_id": "C06",
+    "family": "code",
+    "model": "gpt-6.1-sol",
+    "effort": "max",
+    "answer_sha256": "bfc851b7e95c8e86c599ca60f06b9f7ecec9dd85f2aceecdd1b7a4fdd318f0cf",
+    "recorded_semantic_pass": false,
+    "semantic_pass": true,
+    "strict_pass": true,
+    "passed_cases": 50,
+    "total_cases": 50,
+    "transport_error": null,
+    "grade_error": null
+  },
+  {
+    "task_id": "C06",
+    "family": "code",
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "answer_sha256": "64a02ce41af598d9ee805c8f6f2b90f65310642da34ee6c0fcc3f94e2e2c9125",
+    "recorded_semantic_pass": false,
+    "semantic_pass": true,
+    "strict_pass": true,
+    "passed_cases": 50,
+    "total_cases": 50,
+    "transport_error": null,
+    "grade_error": null
+  }
+]

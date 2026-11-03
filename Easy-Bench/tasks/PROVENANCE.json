@@ -1,0 +1,32 @@
+{
+  "level": "easy",
+  "version": "0.1.0",
+  "synthetic": true,
+  "source_studies": [
+    "gpt-reasoning-effort-2026-09-30",
+    "reasoning-effort-repeat-2026-11-03"
+  ],
+  "prompt_changes": false,
+  "acceptance_changes": false,
+  "published_files_sha256": {
+    "tasks.jsonl": "b43eed73570506edfa73940174a6e2a0dbc4b384eda43978f331dc5d93445c7b",
+    "answers.json": "7e84abec90ca238b753e729cb48685e31ba44b733faa4391ec59ebd6e98d8f82",
+    "manifest.json": "1c47a46efb49528d785a057f6e159cfcc51fb7176c3a3746c301a5ad191fc255",
+    "source/dataset.py": "1ead147a8459e0b7b2666b9a2c703b2017d16e96b5634228a8757cef64276f7f"
+  },
+  "original_acceptance_location": "sealed/answers.json",
+  "release_acceptance_location": "answers.json",
+  "acceptance_visibility": "Public reference data; no longer a hidden holdout",
+  "source_trials_sha256": "c805223d694f91fb324d7452ae534adbd7ab2d3308e69ee5040492c7c3957c19",
+  "source_original_trials_sha256": "6d6f7869980955e848c50e10e072d3771b024cb358cfa81dc4504f66cd5b1912",
+  "published_results": "Derived primary-trial scores only, not raw transport/native logs",
+  "release_grader_changes": [
+    "Previously validated bin() whitelist correction",
+    "Reject non-finite JSON constants in the direct parser",
+    "Check lookup receipts against synthetic catalog values",
+    "Redact inherited environment; deny sandbox access to /Users and /Volumes",
+    "Explicit UTF-8 SQL length limit; optional Connection.setlimit for Python 3.9 compatibility"
+  ],
+  "original_difficulty": "Original 10 easy / 10 medium / 10 hard tags retained; all 30 are the TeoBench Easy level",
+  "license": "MIT; project-specific synthetic generator and fixtures; no downloaded third-party datasets"
+}

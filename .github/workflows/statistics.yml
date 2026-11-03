@@ -1,0 +1,31 @@
+name: Update Easy statistics
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Easy-Bench/studies/**'
+      - 'teobench/**'
+      - '.github/workflows/statistics.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: easy-statistics
+  cancel-in-progress: false
+jobs:
+  statistics:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regrade merged studies and rebuild statistics
+        run: /usr/bin/python3 -m teobench stats --output Easy-Bench/statistics/summary.json
+      - name: Commit changed statistics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Easy-Bench/statistics/summary.json Easy-Bench/statistics/summary.csv
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update Easy-Bench community statistics'
+            git push
+          fi

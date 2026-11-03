@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "level": "easy",
+  "studies": [],
+  "incomplete_runs_excluded": 0,
+  "duplicate_studies_excluded": 0,
+  "identity_status": "submitter-reported model IDs; scores regraded, inference not attested",
+  "aggregation": "Complete 30-task runs only; grouped by model, effort, access route, environment and grader. Not a representative population sample.",
+  "groups": []
+}

@@ -1,0 +1,59 @@
+{
+  "seed": 9302026,
+  "tasks": 30,
+  "difficulties": {
+    "easy": 10,
+    "medium": 10,
+    "hard": 10
+  },
+  "families": {
+    "code": 6,
+    "data": 6,
+    "reasoning": 6,
+    "sql": 6,
+    "tools": 6
+  },
+  "efforts": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "primary_trials": 1050,
+  "public_sha256": "b43eed73570506edfa73940174a6e2a0dbc4b384eda43978f331dc5d93445c7b",
+  "sealed_sha256": "7e84abec90ca238b753e729cb48685e31ba44b733faa4391ec59ebd6e98d8f82",
+  "prompt_hashes": {
+    "R01": "20adb821eee0397658da0aed46f6af2839665c07aa005d22002dec3c74d1b745",
+    "R02": "09810da89e51ac56e9b97a60a993c7169db5a1cfa4049994535564177d91101f",
+    "R03": "6c9b1a6ed3fda12c62175b2d385609721996facd2fa4bb9cbdd67cfa50a16ada",
+    "R04": "f24a817d721fdbca92158bbf277563590a6f77c2aadcfc8d8770c5eb8a70fd06",
+    "R05": "d52fdc308cb912c3b9c904ed2a7a47469273287c524cc27cd4ef76786ec3313d",
+    "R06": "af5d3ad083a0d76533b4e2892d94cfd593d45ade34cd9a17b4f1516a70d095eb",
+    "C01": "863bd35a3df77de45394b7d010b59b1d74932908a8f0de2889a86b4ac9d27cac",
+    "C02": "55c794bb405df972174c35f2c7b9540567d6447c0018c7e644cca0bb6b176bd3",
+    "C03": "3a5ca3ab637b77ebc1b2007da664069b438bd531193ad26175c92e2a3d4e0d7a",
+    "C04": "552ceb7862536d718ee205aba1cfe4e781d1db629bbb437fafe0f52e0b4c7b8e",
+    "C05": "e18c427ff89dc57914eeec25137d402785ce61ac3314e86ea1c0a17ff131b20b",
+    "C06": "da3b2e6c0bb22fcee18e22cf273c6cd3906343fb5b928deeed3a5864e28182a3",
+    "S01": "fcc26d94f9b88938dfeb20b539b1ce56e3b3c3662d3d6fc4540b0a1c12453736",
+    "S02": "b97d2dd650ce2d0ba5f9b83e012d1efa9cae5c1122afef4ef8963df6d4af7d6c",
+    "S03": "da3ae67c2c4403ea51aa4ba732bb7da96bb323d06785d6f77fb4fefa56efb504",
+    "S04": "e33cb43236835ba8907ad1b5de868d77f740f02681164c5c9a50d83f94bae810",
+    "S05": "0c06d4c943aab40219597a2e9aa120c8e703413953d9af5e9890274fd685fcc3",
+    "S06": "1bcdbf6fb68c4e2d6a496462b71049d390816144b916029d7ad899c316b6fdd5",
+    "D01": "9ae1230139a08f82cfc56f19811cfefa2bc94a92eef317f03cba241ded794ef9",
+    "D02": "8185c541b320c72a74b752b76df7561b9086a2d9fa727b2ee3c214e02225ba4f",
+    "D03": "2aea56c5878124ea457294b8e1431b608075f2c86c2a80bf9d64ca703a80806d",
+    "D04": "2ee396a2e5f20fa9351596c2a12392169ece032559daeebb693caa5fb095ccde",
+    "D05": "a8ee197aef8c1d1ad036a339a8abaeedc64ce4f752787c845da2c30297ccabd4",
+    "D06": "cac7f510faed4d2debf756b4fc3eef3710271a600e576c73ed08dda7e67c1af4",
+    "T01": "02c4194f8ce0c3f1477ae2b56a6295e86d20f9760073350fa2c1d3cf4c05b8ac",
+    "T02": "6f0451b8a3254b1dca571647618efee85fa009a3fed1cf9de01687d7f8390c10",
+    "T03": "8d0a0ee42e17eb5ae2bcd2a3bb8a88a1bdd925ec43ea0ea15473a42db0f337c6",
+    "T04": "21789617429cb15dfac7babb6ef399bab5f08be4df97e341a65187170ee07ce3",
+    "T05": "1fb38e6f183a6bf59e41b31c943dff81e01fec1b9c8a4f5da838a670da7395ae",
+    "T06": "be67afdf6ec302b120443e8a4c161ee316b02c9157736ec1bd87a4b55f8e09f4"
+  },
+  "difficulty_status": "a priori labels, not empirically calibrated"
+}

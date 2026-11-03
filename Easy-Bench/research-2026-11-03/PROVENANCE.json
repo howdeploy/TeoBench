@@ -1,0 +1,37 @@
+{
+  "source": "completed reasoning-effort-repeat-2026-11-03",
+  "kind": "derived offline regrade of primary answers; not a new model run",
+  "source_trials_sha256": "c805223d694f91fb324d7452ae534adbd7ab2d3308e69ee5040492c7c3957c19",
+  "source_primary_trials": 1050,
+  "source_pilot_trials": 35,
+  "source_control_trials": 42,
+  "published_trials": 1050,
+  "models": 7,
+  "efforts": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "recorded_pass": 989,
+  "corrected_pass": 991,
+  "raw_logs_included": false,
+  "answer_text_included": false,
+  "model_ids": [
+    "gpt-5.6-luna",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-6-astra",
+    "gpt-6-luna",
+    "gpt-6.1-sol",
+    "gpt-6.1-terra"
+  ],
+  "prompt_bytes_unchanged": true,
+  "model_weights_verified": false,
+  "files_sha256": {
+    "primary.csv": "be27e41fa8563d1f0f48c18225e66f3880148affc68d043dcf236b8d4cb77854",
+    "summary.csv": "aa5f9f711eeab13750ec913652bbcf0ef27438e958c37a570664fafdfce38050",
+    "corrections.json": "fd5d8334c02553950da8109ada40c3c2ac80baa0d285df460746f8cf9dfd4657"
+  }
+}
