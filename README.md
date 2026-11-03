@@ -16,7 +16,12 @@ The first tier, **[Easy-Bench](Easy-Bench/README.md)**, contains 30 tasks from a
 
 ## Quick start
 
-Python 3.9+ and the standard library are sufficient for the inspection and grading CLI; no packages or API keys are required. Grading Python answers requires **macOS with `/usr/bin/sandbox-exec`** and a Python interpreter installed outside `/Users` and `/Volumes`. On other operating systems, the Python grader refuses to execute code without isolation.
+Python 3.9+ and the standard library are sufficient for the inspection and grading CLI; no Python packages or API keys are required. Grading Python answers additionally requires one of:
+
+- **macOS:** `/usr/bin/sandbox-exec` and a Python interpreter installed outside `/Users` and `/Volumes`.
+- **Linux:** [Bubblewrap](https://github.com/containers/bubblewrap) (`bwrap`, with `--disable-userns` support), permitted unprivileged user/network namespaces, and a Python interpreter whose resolved executable is under `/usr`. Install Bubblewrap with your distribution's package manager (for example, `sudo apt-get install bubblewrap`). The checkout and home directory must be outside `/usr`, `/lib`, and `/lib64`.
+
+The Linux sandbox exposes only read-only system runtime directories, with no host home, checkout, temporary files or `/proc`, and isolates the network, processes and environment. If isolation is unavailable or prohibited by the host, grading fails closed; no unconfined fallback is used. Other operating systems remain unsupported for Python execution.
 
 ```bash
 git clone https://github.com/teo-nex/TeoBench.git

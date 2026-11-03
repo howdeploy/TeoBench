@@ -12,7 +12,11 @@ Give the evaluated model only the task prompt and declared tools. Retain every a
 
 For code tasks, the answer is a Python 3 `solve(data)` function. Imports, I/O, reflection, underscore-prefixed attributes and the AST constructs listed in `code_worker.py` are prohibited. Standard pure builtins follow the published whitelist. The corrected worker includes `bin()`, fixing an earlier harness defect. It does not provide every possible Python builtin. Parent compares outputs for all 50 inputs per task; expected outputs do not enter the worker.
 
-Python execution uses macOS sandbox-exec, no network or file writes, denies reads under `/Users`, `/Volumes` and the checkout, and clears the inherited environment. CPU is limited to 2 seconds, parent wall time to 5 seconds. Interpreter/stdlib must be outside the denied paths. No unsafe fallback is provided on other OSes. This restricted task executor is not intended as a general hostile-code hosting service.
+Python execution uses macOS sandbox-exec or Linux Bubblewrap. Both isolate the network, prevent file writes and clear the inherited environment. CPU is limited to 2 seconds, parent wall time to 5 seconds. This restricted task executor is not intended as a general hostile-code hosting service.
+
+On macOS, reads under `/Users`, `/Volumes`, the home directory and checkout are denied. Interpreter/stdlib must be outside the denied paths.
+
+On Linux, `bwrap` must support `--disable-userns`, and the host must permit unprivileged user and network namespaces. Only `/usr` and existing `/lib` and `/lib64` are mounted read-only; the root filesystem is also read-only. No host `/home`, `/tmp`, `/proc`, `/dev` or checkout is mounted. User, IPC, PID, network and UTS namespaces are isolated, capabilities are dropped, nested user namespaces are disabled, and a new session prevents terminal injection. The resolved Python executable must be under `/usr`; the home directory and checkout must not overlap mounted runtime directories. Python runs with `-I -S` so site startup hooks are not loaded. Unsupported layouts and namespace/setup failures fail closed and must be treated as grading infrastructure failures, not wrong answers. There is no unsafe fallback on any OS.
 
 SQL runs in independent in-memory SQLite databases with a read-only authorizer, query-size, step and row limits. `WITH` and ordinary SQLite expressions are allowed; ATTACH, writes and load_extension are denied. All 12 databases per SQL task must pass.
 
